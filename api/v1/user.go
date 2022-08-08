@@ -35,6 +35,7 @@ func AddUser(c *gin.Context) {
 }
 
 //查询单个用户
+//查询用户列表
 func GetUsers(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 	fmt.Printf("user40:%v\n", pageSize)
@@ -54,20 +55,35 @@ func GetUsers(c *gin.Context) {
 	data := model.GetUsers(pageSize, pageNum)
 	fmt.Printf("user55:%v\n", data)
 	c.JSON(http.StatusOK, gin.H{
+		"status": code,
+		"data":   data,
+	})
+}
+
+//编辑用户
+func EditUser(c *gin.Context) {
+	var data model.User
+	id, _ := strconv.Atoi(c.Param("id"))
+	c.ShouldBindJSON(&data)
+	code = model.CheckUser(data.Username)
+	if code == errmsg.SUCCESS {
+		model.EditUser(id, &data)
+	}
+	if code == errmsg.ErrorUsernameUsed {
+		c.Abort()
+	}
+	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
-		"data":    data,
 		"message": errmsg.GetErrMsg(code),
 	})
 }
 
-//查询用户列表
-
-//编辑用户
-func EditUser(c *gin.Context) {
-
-}
-
 //删除用户
 func DeleteUser(c *gin.Context) {
-
+	id, _ := strconv.Atoi(c.Param("id"))
+	code = model.DeleteUser(id)
+	c.JSON(http.StatusOK, gin.H{
+		"starts":  code,
+		"message": errmsg.GetErrMsg(code),
+	})
 }

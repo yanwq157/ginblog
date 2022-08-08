@@ -25,6 +25,7 @@ func CheckUser(name string) (code int) {
 	if users.ID > 0 {
 		return errmsg.ErrorUsernameUsed //1001
 	}
+
 	return errmsg.SUCCESS //200
 
 }
@@ -33,7 +34,9 @@ func CheckUser(name string) (code int) {
 //结构体为引用类型，在函数中作为入参传他的指针
 func CreateUser(data *User) int {
 	//data.Password = ScryptPw(data.Password)
+	fmt.Printf("User36:%v\n", data.Password)
 	err := Db.Create(&data).Error
+	fmt.Printf("User38:%v\n", data.Password)
 	if err != nil {
 		return errmsg.ERROR //500
 	}
@@ -58,25 +61,45 @@ func GetUsers(pageSize int, pageNum int) []User {
 }
 
 //编辑用户
-func EditUser() {
-
+func EditUser(id int, data *User) int {
+	var user User
+	var maps = make(map[string]interface{}) //value有字符串，有整数，所以用interface
+	maps["username"] = data.Username
+	maps["role"] = data.Role
+	err := Db.Model(&user).Where("id = ?", id).Updates(maps).Error //传User 在Model模型更新
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCESS
 }
 
-//删除
-
-func (u *User) BeforeSave() {
-	u.Password = ScryptPw(u.Password)
+//删除用户
+func DeleteUser(id int) int {
+	var user User
+	err := Db.Where("id= ?", id).Delete(&user).Error
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCESS
 }
 
 //密码加密
+
+func (u *User) BeforeSave(tx *gorm.DB) (err error) {
+	u.Password = ScryptPw(u.Password)
+	return
+}
+
 func ScryptPw(password string) string {
 	const KeyLen = 10
 	salt := make([]byte, 8)
-	salt = []byte{123, 13, 34, 44, 53, 12, 71, 81}
+	salt = []byte{12, 13, 34, 44, 53, 12, 71, 81}
 	HashPw, err := scrypt.Key([]byte(password), salt, 16384, 8, 1, KeyLen)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fpw := base64.StdEncoding.EncodeToString(HashPw)
+	fmt.Printf("User90:%v\n", fpw)
 	return fpw
+
 }

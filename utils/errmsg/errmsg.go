@@ -15,19 +15,24 @@ const (
 
 	//code=2000 ...文章模块错误
 
-	//code=2000 ...分类模块错误
+	//code=3000 ...分类模块错误
+
+	ErrorCateNameUsed     = 2001
+	ErrorCateNameNotFound = 2002
 )
 
 var codeMsg = map[int]string{
-	SUCCESS:             "ok",
-	ERROR:               "FAIL",
-	ErrorUsernameUsed:   "用户名已存在",
-	ErrorPasswordWrong:  "密码错误",
-	ErrorUserNotExist:   "用户名不存在",
-	ErrorTokenExist:     "TOKEN不存在",
-	ErrorTokenRuntime:   "TOKEN已过期",
-	ErrorTokenWrong:     "TOKEN不正确",
-	ErrorTokenTypeWrong: "TOKEN格式不正确",
+	SUCCESS:               "ok",
+	ERROR:                 "FAIL",
+	ErrorUsernameUsed:     "用户名已存在",
+	ErrorPasswordWrong:    "密码错误",
+	ErrorUserNotExist:     "用户名不存在",
+	ErrorTokenExist:       "TOKEN不存在",
+	ErrorTokenRuntime:     "TOKEN已过期",
+	ErrorTokenWrong:       "TOKEN不正确",
+	ErrorTokenTypeWrong:   "TOKEN格式不正确",
+	ErrorCateNameUsed:     "该分类已存在",
+	ErrorCateNameNotFound: "未找到该分类",
 }
 
 func GetErrMsg(code int) string {
