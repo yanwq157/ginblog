@@ -26,9 +26,26 @@ func CreateArt(data *Article) int {
 	return errmsg.SUCCESS //200
 }
 
-//查询分类所有文章
+//查询分类下所有文章
+func GatCateArt(id int, pageSize int, pageMum int) ([]Article, int) {
+	var crateArtist []Article
+	err := Db.Preload("Category").Offset((pageMum-1)*pageSize).Limit(pageSize).Where("cid = ?", id).Find(&crateArtist).Error
+	if err != nil {
+		return nil, errmsg.ErrorArtNotExits
+	}
+	return crateArtist, errmsg.SUCCESS
+}
 
 //查询单个文章
+
+func GetArtInfo(id int) (Article, int) {
+	var art Article
+	err := Db.Preload("Category").Where("id = ?", id).First(&art).Error
+	if err != nil {
+		return art, errmsg.ErrorArtNotExits
+	}
+	return art, errmsg.SUCCESS
+}
 
 //查询文章列表
 
