@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"ginblog/model"
 	"ginblog/utils/errmsg"
 	"github.com/gin-gonic/gin"
@@ -31,10 +30,8 @@ func AddCategory(c *gin.Context) {
 //查询分类列表
 
 func GetCate(c *gin.Context) {
-	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
-	fmt.Printf("user40:%v\n", pageSize)
-	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
-	fmt.Printf("user42:%v\n", pageNum)
+	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
+	pageNum, _ := strconv.Atoi(c.Query("pageNum"))
 	if pageNum == 0 {
 		pageNum = -1
 	}
@@ -44,10 +41,7 @@ func GetCate(c *gin.Context) {
 	case pageSize <= 0:
 		pageSize = 10
 	}
-	fmt.Printf("user52:%v\n", pageNum)
-
 	data := model.GetCate(pageSize, pageNum)
-	fmt.Printf("user55:%v\n", data)
 	c.JSON(http.StatusOK, gin.H{
 		"status": code,
 		"data":   data,
@@ -59,7 +53,10 @@ func GetCate(c *gin.Context) {
 func EditCate(c *gin.Context) {
 	var data model.Category
 	id, _ := strconv.Atoi(c.Param("id"))
-	c.ShouldBindJSON(&data)
+	err := c.ShouldBindJSON(&data)
+	if err != nil {
+		return
+	}
 	code = model.CheckCategory(data.Name)
 	if code == errmsg.SUCCESS {
 		model.EditCate(id, &data)

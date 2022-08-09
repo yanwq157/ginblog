@@ -27,6 +27,7 @@ func CreateArt(data *Article) int {
 }
 
 //查询分类下所有文章
+
 func GatCateArt(id int, pageSize int, pageMum int) ([]Article, int) {
 	var crateArtist []Article
 	err := Db.Preload("Category").Offset((pageMum-1)*pageSize).Limit(pageSize).Where("cid = ?", id).Find(&crateArtist).Error
@@ -50,12 +51,12 @@ func GetArtInfo(id int) (Article, int) {
 //查询文章列表
 
 func GetArt(pageSize int, pageNum int) ([]Article, int) {
-	var articlelist []Article
-	err = Db.Preload("Category").Offset((pageNum - 1) * pageSize).Limit(pageSize).Find(&articlelist).Error
+	var articleList []Article
+	err = Db.Preload("Category").Offset((pageNum - 1) * pageSize).Limit(pageSize).Find(&articleList).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, errmsg.ERROR
 	}
-	return articlelist, errmsg.SUCCESS
+	return articleList, errmsg.SUCCESS
 }
 
 //编辑分类

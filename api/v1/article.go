@@ -23,9 +23,10 @@ func AddArticle(c *gin.Context) {
 }
 
 //查询分类下的所有文章
+
 func GetCateArt(c *gin.Context) {
-	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
-	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
+	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
+	pageNum, _ := strconv.Atoi(c.Query("pageNum"))
 	id, _ := strconv.Atoi(c.Param("id"))
 	if pageNum == 0 {
 		pageNum = -1
@@ -59,8 +60,8 @@ func GetArtInfo(c *gin.Context) {
 //查询文章列表
 
 func GetArt(c *gin.Context) {
-	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
-	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
+	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
+	pageNum, _ := strconv.Atoi(c.Query("pageNum"))
 	if pageNum == 0 {
 		pageNum = -1
 	}
@@ -85,7 +86,10 @@ func GetArt(c *gin.Context) {
 func EditArt(c *gin.Context) {
 	var data model.Article
 	id, _ := strconv.Atoi(c.Param("id"))
-	c.ShouldBindJSON(&data)
+	err := c.ShouldBindJSON(&data)
+	if err != nil {
+		return
+	}
 	code = model.EditArt(id, &data)
 
 	c.JSON(http.StatusOK, gin.H{
