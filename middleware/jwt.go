@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"ginblog/utils"
 	"ginblog/utils/errmsg"
 	"github.com/dgrijalva/jwt-go"
@@ -80,10 +79,8 @@ func JwtToken() gin.HandlerFunc {
 			return
 
 		}
-		fmt.Println(tokenHarder)
 		//将tokenHarder按空格切割问两个切片 tokenHarder
 		checkToken := strings.SplitN(tokenHarder, " ", 2)
-		fmt.Println(checkToken)
 		if len(checkToken) != 2 && checkToken[0] != "Bearer" {
 			code = errmsg.ErrorTokenTypeWrong
 			c.JSON(http.StatusOK, gin.H{

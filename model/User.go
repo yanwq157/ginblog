@@ -19,6 +19,7 @@ type User struct {
 //数据库操作的方法
 
 //查询用户是否存在
+
 func CheckUser(name string) (code int) {
 	var users User
 	Db.Select("id").Where("username = ?", name).First(&users)
@@ -32,6 +33,7 @@ func CheckUser(name string) (code int) {
 
 //新增用户
 //结构体为引用类型，在函数中作为入参传他的指针
+
 func CreateUser(data *User) int {
 	//data.Password = ScryptPw(data.Password)
 	fmt.Printf("User36:%v\n", data.Password)
@@ -44,23 +46,18 @@ func CreateUser(data *User) int {
 }
 
 //查询用户列表
+
 func GetUsers(pageSize int, pageNum int) []User {
 	var users []User
-	fmt.Printf("User46:%v\n", users)
-	fmt.Printf("User47:%v\n", pageNum)
-	fmt.Printf("User48:%v\n", pageSize)
-	fmt.Printf("User47:%v\n", Db.Select(&pageNum))
-	fmt.Printf("User48:%v\n", Db.Select(&pageSize))
 	err = Db.Offset((pageNum - 1) * pageSize).Limit(pageSize).Find(&users).Error
-	fmt.Printf("User50:%v\n", users)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil
 	}
-	fmt.Printf("User54:%v\n", users)
 	return users
 }
 
 //编辑用户
+
 func EditUser(id int, data *User) int {
 	var user User
 	var maps = make(map[string]interface{}) //value有字符串，有整数，所以用interface
@@ -74,6 +71,7 @@ func EditUser(id int, data *User) int {
 }
 
 //删除用户
+
 func DeleteUser(id int) int {
 	var user User
 	err := Db.Where("id= ?", id).Delete(&user).Error
@@ -99,7 +97,6 @@ func ScryptPw(password string) string {
 		log.Fatal(err)
 	}
 	fpw := base64.StdEncoding.EncodeToString(HashPw)
-	fmt.Printf("User90:%v\n", fpw)
 	return fpw
 }
 

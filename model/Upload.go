@@ -35,9 +35,9 @@ func UploadFile(file multipart.File, fileSize int64) (string, int) {
 	ret := storage.PutRet{}
 	//用来以表单方式上传一个文件
 	//ctx 是请求的上下文.ret 是上传成功后返回的数据。
-	//uptoken 是由业务服务器颁发的上传凭证。
+	//UpToken 是由业务服务器颁发的上传凭证。
 	//data 是文件内容的访问接口（io.Reader）。
-	//fsize 是要上传的文件大小。
+	//FSize 是要上传的文件大小。
 	//extra 是上传的一些可选项。
 	err := formUploader.PutWithoutKey(context.Background(), &ret, upToken, file, fileSize, &putExtra)
 	if err != nil {

@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"ginblog/model"
 	"ginblog/utils/errmsg"
 	"github.com/gin-gonic/gin"
@@ -10,12 +9,6 @@ import (
 )
 
 var code int
-
-//查询用户是否存在
-
-func UserExist(c *gin.Context) {
-
-}
 
 //添加用户
 
@@ -42,9 +35,7 @@ func AddUser(c *gin.Context) {
 
 func GetUsers(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
-	fmt.Printf("user40:%v\n", pageSize)
 	pageNum, _ := strconv.Atoi(c.Query("pageNum"))
-	fmt.Printf("user42:%v\n", pageNum)
 	if pageNum == 0 {
 		pageNum = -1
 	}
@@ -54,10 +45,8 @@ func GetUsers(c *gin.Context) {
 	case pageSize <= 0:
 		pageSize = 10
 	}
-	fmt.Printf("user52:%v\n", pageNum)
 
 	data := model.GetUsers(pageSize, pageNum)
-	fmt.Printf("user55:%v\n", data)
 	c.JSON(http.StatusOK, gin.H{
 		"status": code,
 		"data":   data,
