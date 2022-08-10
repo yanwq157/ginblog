@@ -85,7 +85,7 @@ func DeleteUser(id int) int {
 
 //密码加密
 
-func (u *User) BeforeSave(tx *gorm.DB) (err error) {
+func (u *User) BeforeSave(*gorm.DB) (err error) {
 	u.Password = ScryptPw(u.Password)
 	return
 }
@@ -101,5 +101,21 @@ func ScryptPw(password string) string {
 	fpw := base64.StdEncoding.EncodeToString(HashPw)
 	fmt.Printf("User90:%v\n", fpw)
 	return fpw
+}
 
+//登录验证
+
+func CheckLogin(username string, password string) int {
+	var user User
+	Db.Where("username = ?", username).First(&user)
+	if user.ID == 0 {
+		return errmsg.ErrorUserNotExist
+	}
+	if ScryptPw(password) != user.Password {
+		return errmsg.ErrorPasswordWrong
+	}
+	if user.Role != 0 {
+		return errmsg.ErrorUserNoRight
+	}
+	return errmsg.SUCCESS
 }

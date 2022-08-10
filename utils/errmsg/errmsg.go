@@ -12,7 +12,7 @@ const (
 	ErrorTokenRuntime   = 1005
 	ErrorTokenWrong     = 1006
 	ErrorTokenTypeWrong = 1007
-
+	ErrorUserNoRight    = 1008
 	//code=2000 ...文章模块错误
 
 	ErrorArtNotExits = 3001
@@ -33,9 +33,9 @@ var codeMsg = map[int]string{
 	ErrorTokenRuntime:   "TOKEN已过期",
 	ErrorTokenWrong:     "TOKEN不正确",
 	ErrorTokenTypeWrong: "TOKEN格式不正确",
-
-	ErrorCateNameUsed: "该分类已存在",
-	ErrorCateNotExits: "该分类不存在",
+	ErrorUserNoRight:    "该用户无权限",
+	ErrorCateNameUsed:   "该分类已存在",
+	ErrorCateNotExits:   "该分类不存在",
 
 	ErrorArtNotExits: "文章不存在",
 }
