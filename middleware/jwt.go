@@ -35,7 +35,7 @@ func SetToken(username string) (string, int) {
 	//使用NewWithClaims new一个token，两个参数，返回一个token
 	//参数SigningMethodES256为加密的方法
 	//参数SetClaims为加密的一些参数，可以使用自带的MapClaims,也可以自定义结构体，
-	reqClaim := jwt.NewWithClaims(jwt.SigningMethodES256, SetClaims)
+	reqClaim := jwt.NewWithClaims(jwt.SigningMethodHS256, SetClaims)
 	token, err := reqClaim.SignedString(JetKey) //获取完整的签名令牌
 	fmt.Printf("token:%v\n", token)
 	if err != nil {
