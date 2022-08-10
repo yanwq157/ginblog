@@ -117,6 +117,5 @@ func CheckLogin(username string, password string) int {
 	if user.Role != 0 {
 		return errmsg.ErrorUserNoRight
 	}
-	fmt.Println(user.ID)
 	return errmsg.SUCCESS
 }
