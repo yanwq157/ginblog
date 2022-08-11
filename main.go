@@ -1,15 +1,12 @@
 package main
 
 import (
-	log "github.com/sirupsen/logrus"
+	"ginblog/model"
+	"ginblog/routes"
 )
 
 func main() {
-	//model.InitDb()
-	//routes.InitRouter()
-	log.WithFields(log.Fields{
-		"animal": "walrus",
-		"number": 1,
-		"size":   10,
-	}).Info("A walrus appears")
+	model.InitDb()
+	routes.InitRouter()
+
 }

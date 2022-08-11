@@ -10,7 +10,13 @@ import (
 )
 
 func Logger() gin.HandlerFunc {
+	filePath := "log/log.log"
+	scr, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0755)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
 	logger := logrus.New()
+	logger.Out = scr
 	return func(c *gin.Context) {
 		startTime := time.Now()
 		//gin里面是洋葱模型中间件，先执行c.Next上面的内容，在执行下一个中间件，下一个中间件也是执行c.Next上面的内容，都执行完后返回到第一个中间件c.Next后面的内容
@@ -51,7 +57,7 @@ func Logger() gin.HandlerFunc {
 		} else if statusCode >= 400 {
 			entry.Warn()
 		} else {
-			entry.Info(time.Now())
+			entry.Info()
 		}
 	}
 }
