@@ -11,9 +11,9 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"type:varchar(20);not null" json:"username"`
-	Password string `gorm:"type:varchar(20);not null" json:"password"`
-	Role     int    `gorm:"type:int" json:"role"`
+	Username string `gorm:"type:varchar(20);not null" json:"username" validate:"required,,min=4,max=14"`
+	Password string `gorm:"type:varchar(20);not null" json:"password" validate:"required,,min=4,max=14"`
+	Role     int    `gorm:"type:int;DEFAULT:2" json:"role" validate:"required,,get=2"` //validate里面为0是空，改为1为管理员，2为用户,默认为2
 }
 
 //数据库操作的方法
@@ -111,7 +111,7 @@ func CheckLogin(username string, password string) int {
 	if ScryptPw(password) != user.Password {
 		return errmsg.ErrorPasswordWrong
 	}
-	if user.Role != 0 {
+	if user.Role != 1 {
 		return errmsg.ErrorUserNoRight
 	}
 	return errmsg.SUCCESS
