@@ -2,7 +2,6 @@ package model
 
 import (
 	"encoding/base64"
-	"fmt"
 	"ginblog/utils/errmsg"
 	"golang.org/x/crypto/scrypt"
 	"gorm.io/gorm"
@@ -11,9 +10,9 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"type:varchar(20);not null" json:"username" validate:"required,,min=4,max=14"`
-	Password string `gorm:"type:varchar(20);not null" json:"password" validate:"required,,min=4,max=14"`
-	Role     int    `gorm:"type:int;DEFAULT:2" json:"role" validate:"required,,get=2"` //validate里面为0是空，改为1为管理员，2为用户,默认为2
+	Username string `gorm:"type:varchar(20);not null" json:"username" validate:"required,min=4,max=14" label:"用户名"`
+	Password string `gorm:"type:varchar(20);not null" json:"password" validate:"required,min=4,max=14" label:"密码"`
+	Role     int    `gorm:"type:int;DEFAULT:2" json:"role" validate:"required,gte=2" label:"角色"` //validate里面为0是空，改为1为管理员，2为用户,默认为2
 }
 
 //数据库操作的方法
@@ -26,9 +25,7 @@ func CheckUser(name string) (code int) {
 	if users.ID > 0 {
 		return errmsg.ErrorUsernameUsed //1001
 	}
-
 	return errmsg.SUCCESS //200
-
 }
 
 //新增用户
@@ -36,9 +33,7 @@ func CheckUser(name string) (code int) {
 
 func CreateUser(data *User) int {
 	//data.Password = ScryptPw(data.Password)
-	fmt.Printf("User36:%v\n", data.Password)
 	err := Db.Create(&data).Error
-	fmt.Printf("User38:%v\n", data.Password)
 	if err != nil {
 		return errmsg.ERROR //500
 	}
@@ -47,13 +42,14 @@ func CreateUser(data *User) int {
 
 //查询用户列表
 
-func GetUsers(pageSize int, pageNum int) []User {
+func GetUsers(pageSize int, pageNum int) ([]User, int64) {
 	var users []User
-	err = Db.Offset((pageNum - 1) * pageSize).Limit(pageSize).Find(&users).Error
+	var total int64
+	err = Db.Offset((pageNum - 1) * pageSize).Limit(pageSize).Find(&users).Count(&total).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil
+		return nil, 0
 	}
-	return users
+	return users, total
 }
 
 //编辑用户

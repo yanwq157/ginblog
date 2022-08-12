@@ -41,10 +41,11 @@ func GetCate(c *gin.Context) {
 	case pageSize <= 0:
 		pageSize = 10
 	}
-	data := model.GetCate(pageSize, pageNum)
+	data, total := model.GetCate(pageSize, pageNum)
 	c.JSON(http.StatusOK, gin.H{
 		"status": code,
 		"data":   data,
+		"total":  total,
 	})
 }
 

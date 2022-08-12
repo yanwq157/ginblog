@@ -3,6 +3,7 @@ package v1
 import (
 	"ginblog/model"
 	"ginblog/utils/errmsg"
+	"ginblog/utils/validator"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -14,7 +15,16 @@ var code int
 
 func AddUser(c *gin.Context) {
 	var data model.User
+	var msg string
 	_ = c.ShouldBindJSON(&data)
+	msg, code := validator.Validate(&data)
+	if code != errmsg.SUCCESS {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  code,
+			"message": msg,
+		})
+		return
+	}
 	code = model.CheckUser(data.Username)
 	if code == errmsg.SUCCESS {
 		model.CreateUser(&data)
@@ -28,8 +38,6 @@ func AddUser(c *gin.Context) {
 		"message": errmsg.GetErrMsg(code),
 	})
 }
-
-//查询单个用户
 
 //查询用户列表
 
@@ -46,10 +54,11 @@ func GetUsers(c *gin.Context) {
 		pageSize = 10
 	}
 
-	data := model.GetUsers(pageSize, pageNum)
+	data, total := model.GetUsers(pageSize, pageNum)
 	c.JSON(http.StatusOK, gin.H{
 		"status": code,
 		"data":   data,
+		"total":  total,
 	})
 }
 

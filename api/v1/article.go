@@ -37,10 +37,11 @@ func GetCateArt(c *gin.Context) {
 	case pageSize <= 0:
 		pageSize = 10
 	}
-	data, code := model.GatCateArt(id, pageSize, pageNum)
+	data, code, total := model.GatCateArt(id, pageSize, pageNum)
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,
+		"total":   total,
 		"message": errmsg.GetErrMsg(code),
 	})
 }
@@ -72,12 +73,13 @@ func GetArt(c *gin.Context) {
 		pageSize = 10
 	}
 	fmt.Println(pageSize)
-	data, code := model.GetArt(pageSize, pageNum)
+	data, code, total := model.GetArt(pageSize, pageNum)
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,
 		"message": errmsg.GetErrMsg(code),
+		"total":   total,
 	})
 }
 

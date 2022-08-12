@@ -28,13 +28,14 @@ func CreateArt(data *Article) int {
 
 //查询分类下所有文章
 
-func GatCateArt(id int, pageSize int, pageMum int) ([]Article, int) {
+func GatCateArt(id int, pageSize int, pageMum int) ([]Article, int, int64) {
 	var crateArtist []Article
-	err := Db.Preload("Category").Offset((pageMum-1)*pageSize).Limit(pageSize).Where("cid = ?", id).Find(&crateArtist).Error
+	var total int64
+	err := Db.Preload("Category").Offset((pageMum-1)*pageSize).Limit(pageSize).Where("cid = ?", id).Find(&crateArtist).Count(&total).Error
 	if err != nil {
-		return nil, errmsg.ErrorArtNotExits
+		return nil, errmsg.ErrorArtNotExits, 0
 	}
-	return crateArtist, errmsg.SUCCESS
+	return crateArtist, errmsg.SUCCESS, total
 }
 
 //查询单个文章
@@ -50,13 +51,14 @@ func GetArtInfo(id int) (Article, int) {
 
 //查询文章列表
 
-func GetArt(pageSize int, pageNum int) ([]Article, int) {
+func GetArt(pageSize int, pageNum int) ([]Article, int, int64) {
 	var articleList []Article
-	err = Db.Preload("Category").Offset((pageNum - 1) * pageSize).Limit(pageSize).Find(&articleList).Error
+	var total int64
+	err = Db.Preload("Category").Offset((pageNum - 1) * pageSize).Limit(pageSize).Find(&articleList).Count(&total).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, errmsg.ERROR
+		return nil, errmsg.ERROR, 0
 	}
-	return articleList, errmsg.SUCCESS
+	return articleList, errmsg.SUCCESS, total
 }
 
 //编辑分类
